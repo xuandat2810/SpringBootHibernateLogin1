@@ -9,6 +9,7 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+//abc
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,6 +39,7 @@ public class PersonAccountDAO {
         }
     }
 
+    //commit thu
     public List<PersonInfo> listPersonAccountInfo(){
         String sql = "Select new" + PersonInfo.class.getName()
                 + "(e.id, e.userName, e.password, e.name, e.age, e.phone)"//
