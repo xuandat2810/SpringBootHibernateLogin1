@@ -9,11 +9,10 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-//abc
 
 import java.util.List;
 import java.util.stream.Collectors;
-
+//Nguyen Xuaan DDatj
 @Repository
 @Transactional
 public class PersonAccountDAO {
