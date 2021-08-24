@@ -3,6 +3,7 @@ package com.example.springboothibernatelogin.controller;
 import com.example.springboothibernatelogin.dao.PersonAccountDAO;
 import com.example.springboothibernatelogin.entity.Person;
 import com.example.springboothibernatelogin.exception.LoginTransactionException;
+import com.example.springboothibernatelogin.form.PersonDeleteForm;
 import com.example.springboothibernatelogin.form.PersonForm;
 import com.example.springboothibernatelogin.form.PersonFormAccount;
 import com.example.springboothibernatelogin.model.PersonInfo;
@@ -36,18 +37,12 @@ public class PersonController {
 
     @PostMapping("/createPerson")
     public String AddPerson(Model model, @ModelAttribute PersonForm personForm){
-        String userName = personForm.getUserName();
-        String password = personForm.getPassword();
-        String name = personForm.getName();
-        int age = personForm.getAge();
-        int phone = personForm.getPhone();
-
-        if(userName != null && password != null &&
-        name != null && age > 0){
+        if(personForm.getUserName() != null && personForm.getPassword() != null
+        && personForm.getName() != null){
+            personAccountDAO.addPerson(personForm);
             //personAccountDAO.addAccount(new Person(userName, password, name, age, phone));
-            //return "redirect:/accountsPage";
+            return "accountsPage";
         }
-
         //model.addAttribute("errorMessage", errorMessage);
         return "createPerson";
     }
@@ -60,7 +55,8 @@ public class PersonController {
 
     @GetMapping("/deletePerson")
     public String showDeletePerson(Model model){
-
+        PersonDeleteForm personDeleteForm = new PersonDeleteForm();
+        model.addAttribute("personDeleteForm", personDeleteForm);
         return "deletePerson";
     }
 }
