@@ -2,6 +2,7 @@ package com.example.springboothibernatelogin.dao;
 
 import com.example.springboothibernatelogin.entity.Person;
 import com.example.springboothibernatelogin.exception.LoginTransactionException;
+import com.example.springboothibernatelogin.form.PersonForm;
 import com.example.springboothibernatelogin.model.PersonInfo;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -26,15 +27,16 @@ public class PersonAccountDAO {
         query.setParameter("userName", userName);
         query.setParameter("password", password);
         Person person = (Person) query.uniqueResult();
+        System.out.println("user name: " + person.getUserName() + "password: " + person.getPassword());
         return person;
     }
 
-    public boolean checkAccount(String userName, String password) throws LoginTransactionException {
+    public boolean checkAccount(String userName, String password){
         Person person = this.findPersonAccount(userName, password);
-        if(person == null || person.getPassword() != password){
-            throw new LoginTransactionException("Account not found " + userName);
-        }else{
+        if(person.getUserName().contains(userName)){
             return true;
+        }else{
+            return false;
         }
     }
 
@@ -53,9 +55,17 @@ public class PersonAccountDAO {
 
     //@Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
 //    public void addAccount(String nameUser, String password, String name, int age, int phone){
-    public void addAccount(Person person){
+    public void addPerson(PersonForm personForm){
         Session session = this.sessionFactory.openSession();
-        session.persist(person);
+        Person person = new Person();
+        person.setUserName(personForm.getUserName());
+        person.setPassword(personForm.getPassword());
+        person.setName(personForm.getName());
+        person.setAge(personForm.getAge());
+        person.setPhone(personForm.getPhone());
+        session.save(person);
+        session.close();
+        //session.persist(person);
     }
 
    // @Transactional
@@ -64,5 +74,11 @@ public class PersonAccountDAO {
         Person person = session.get(Person.class, id);
         session.delete(person);
     }
+
+    public void update(int id){
+        Session session = this.sessionFactory.openSession();
+
+    }
+
 
 }
