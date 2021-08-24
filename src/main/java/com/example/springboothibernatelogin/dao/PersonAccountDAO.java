@@ -67,18 +67,13 @@ public class PersonAccountDAO {
         session.close();
         //session.persist(person);
     }
-
    // @Transactional
     public void deleteAccount(int id){
         Session session = this.sessionFactory.openSession();
         Person person = session.get(Person.class, id);
         session.delete(person);
     }
-
     public void update(int id){
         Session session = this.sessionFactory.openSession();
-
     }
-
-
 }

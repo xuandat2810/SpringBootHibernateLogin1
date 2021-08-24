@@ -6,6 +6,7 @@ import com.example.springboothibernatelogin.exception.LoginTransactionException;
 import com.example.springboothibernatelogin.form.PersonDeleteForm;
 import com.example.springboothibernatelogin.form.PersonForm;
 import com.example.springboothibernatelogin.form.PersonFormAccount;
+import com.example.springboothibernatelogin.form.PersonUpdateForm;
 import com.example.springboothibernatelogin.model.PersonInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -49,7 +50,8 @@ public class PersonController {
 
     @GetMapping("/updatePerson")
     public String showUpdatePerson(Model model){
-
+        PersonUpdateForm personUpdateForm = new PersonUpdateForm();
+        model.addAttribute("personUpdateForm", personUpdateForm);
         return "updatePerson";
     }
 
