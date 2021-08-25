@@ -3,6 +3,7 @@ package com.example.springboothibernatelogin.dao;
 import com.example.springboothibernatelogin.entity.Person;
 import com.example.springboothibernatelogin.exception.LoginTransactionException;
 import com.example.springboothibernatelogin.form.PersonForm;
+import com.example.springboothibernatelogin.form.PersonUpdateForm;
 import com.example.springboothibernatelogin.model.PersonInfo;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -21,7 +22,12 @@ public class PersonAccountDAO {
     @Autowired
     private SessionFactory sessionFactory;
 
-    public Person findPersonAccount(String userName, String password){
+    public Person findById(int id){
+        Session session = this.sessionFactory.getCurrentSession();
+        return session.get(Person.class, id);
+    }
+
+    /*public Person findPersonAccount(String userName, String password){
         String hql = "from Person where userName=:userName and password=:password";
         Query query = sessionFactory.getCurrentSession().createQuery(hql);
         query.setParameter("userName", userName);
@@ -38,14 +44,10 @@ public class PersonAccountDAO {
         }else{
             return false;
         }
-    }
+    }*/
 
     //commit thu
     public List<PersonInfo> listPersonAccountInfo(){
-        String sql = "Select new" + PersonInfo.class.getName()
-                + "(e.id, e.userName, e.password, e.name, e.age, e.phone)"//
-                + "from" + Person.class.getName() + "as e ";
-        //String sql1 = "select * form Person";
         Session session = this.sessionFactory.getCurrentSession();
         Query<Person> query = session.createQuery("from Person");
         return query.getResultList().stream().map(o->
@@ -68,12 +70,29 @@ public class PersonAccountDAO {
         //session.persist(person);
     }
    // @Transactional
-    public void deleteAccount(int id){
-        Session session = this.sessionFactory.openSession();
+    public void deletePerson(int id){
+        /*Session session = this.sessionFactory.openSession();
         Person person = session.get(Person.class, id);
-        session.delete(person);
+        session.delete(person);*/
+        Session session = sessionFactory.openSession();
+        String hql = "delete from Person where id=:id";
+        Query query = session.createQuery(hql);
+        query.setParameter("id", id);
+        int d = query.executeUpdate();
+        //session.clear();
+        session.close();
     }
-    public void update(int id){
-        Session session = this.sessionFactory.openSession();
+
+    @Transactional(rollbackFor = Exception.class)
+    public void updatePerson(PersonUpdateForm personUpdateForm){
+        Person person = this.findById(personUpdateForm.getId());
+
+        person.setUserName(personUpdateForm.getUserName());
+        person.setPassword(personUpdateForm.getPassword());
+        person.setName(personUpdateForm.getName());
+        person.setAge(personUpdateForm.getAge());
+        person.setPhone(personUpdateForm.getPhone());
+
+        System.out.println(personUpdateForm.getUserName() + " " + personUpdateForm.getPassword() + "" + personUpdateForm.getName());
     }
 }

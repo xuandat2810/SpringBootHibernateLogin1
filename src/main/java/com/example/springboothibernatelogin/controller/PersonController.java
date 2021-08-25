@@ -37,12 +37,13 @@ public class PersonController {
     }
 
     @PostMapping("/createPerson")
-    public String AddPerson(Model model, @ModelAttribute PersonForm personForm){
-        if(personForm.getUserName() != null && personForm.getPassword() != null
-        && personForm.getName() != null){
+    public String addPerson(Model model, @ModelAttribute PersonForm personForm){
+        if(personForm.getUserName() != null && personForm.getUserName().length() > 0
+                && personForm.getPassword() != null && personForm.getPassword().length() > 0
+                && personForm.getName() != null && personForm.getName().length() > 0){
             personAccountDAO.addPerson(personForm);
             //personAccountDAO.addAccount(new Person(userName, password, name, age, phone));
-            return "accountsPage";
+            return "redirect:/";
         }
         //model.addAttribute("errorMessage", errorMessage);
         return "createPerson";
@@ -55,10 +56,30 @@ public class PersonController {
         return "updatePerson";
     }
 
+    @PostMapping("/updatePerson")
+    public String updatePerson(Model model, @ModelAttribute PersonUpdateForm personUpdateForm){
+        if(personUpdateForm.getUserName() != null && personUpdateForm.getUserName().length() > 0
+                && personUpdateForm.getPassword() != null && personUpdateForm.getPassword().length() > 0
+                && personUpdateForm.getName() != null && personUpdateForm.getName().length() > 0){
+            personAccountDAO.updatePerson(personUpdateForm);
+            return "redirect:/";
+        }
+        return "updatePerson";
+    }
+
     @GetMapping("/deletePerson")
     public String showDeletePerson(Model model){
         PersonDeleteForm personDeleteForm = new PersonDeleteForm();
         model.addAttribute("personDeleteForm", personDeleteForm);
+        return "deletePerson";
+    }
+
+    @PostMapping("/deletePerson")
+    public String deletePerson(Model model, @ModelAttribute PersonDeleteForm personDeleteForm){
+        if(personDeleteForm.getId() > 0){
+            personAccountDAO.deletePerson(personDeleteForm.getId());
+            return "redirect:/";
+        }
         return "deletePerson";
     }
 }
