@@ -7,6 +7,7 @@ import com.example.springboothibernatelogin.form.PersonUpdateForm;
 import com.example.springboothibernatelogin.model.PersonInfo;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -16,7 +17,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 //Nguyen Xuaan DDatj
 @Repository
-@Transactional
 public class PersonAccountDAO {
 
     @Autowired
@@ -69,17 +69,19 @@ public class PersonAccountDAO {
         session.close();
         //session.persist(person);
     }
-   // @Transactional
+    @Transactional
     public void deletePerson(int id){
-        /*Session session = this.sessionFactory.openSession();
+        Session session = this.sessionFactory.openSession();
+        Transaction tx = session.beginTransaction();
         Person person = session.get(Person.class, id);
-        session.delete(person);*/
-        Session session = sessionFactory.openSession();
+        session.delete(person);
+        /*Session session = sessionFactory.openSession();
         String hql = "delete from Person where id=:id";
         Query query = session.createQuery(hql);
         query.setParameter("id", id);
-        int d = query.executeUpdate();
-        //session.clear();
+        int d = query.executeUpdate();*/
+        session.flush();
+        tx.commit();
         session.close();
     }
 
